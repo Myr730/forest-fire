@@ -8,6 +8,7 @@ function App() {
   let [trees, setTrees] = useState([]); //Lista de arbolitos.
   let gridSize = 5; //Tamaño de nuestro grid.
   const running = useRef(null);
+  const [paused, setPaused] = useState(false); //Estado de pausa.
 
   let setup = () => {
     console.log("Hola");
@@ -23,7 +24,7 @@ function App() {
   };
 
   const handleStart = () => {
-    console.log("location", location);
+    if (!location || running.current) return; 
     running.current = setInterval(() => {
       fetch("http://localhost:8000" + location)
       .then(res => res.json())
@@ -35,11 +36,25 @@ function App() {
 
   const handleStop = () => {
     clearInterval(running.current);
+    running.current = null;
+    setPaused(false);
   }
+
+  const handlePause = () => { //Si está corriendo, lo pausa. Si no, lo resume.
+  if (paused) {
+    if (location) handleStart();
+    setPaused(false);
+  } else {
+    clearInterval(running.current);
+    running.current = null;
+    setPaused(true);
+  }
+};
+
   //Cuenta la cantidad de árboles "quemándose"
   let burning = trees.filter(t => t.status == "burning").length;
 
-  if (burning == 0)
+  if (burning == 0 && running.current)
     handleStop(); //Si no hay, para la simulación.
 
   let offset = (500 - gridSize * 12) / 2;
@@ -54,6 +69,9 @@ function App() {
         </Button>
         <Button variant={"contained"} onClick={handleStop}>
           Stop
+        </Button>
+        <Button variant={"contained"} onClick={handlePause}>
+          Pause
         </Button>
       </div>
       <svg width="500" height="500" xmlns="http://www.w3.org/2000/svg" style={{backgroundColor:"white"}}>
