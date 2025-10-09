@@ -10,6 +10,7 @@ function App() {
   let [gridSize, setGridSize] = useState(20); //Tamaño de nuestro grid.
   const running = useRef(null);
   const [paused, setPaused] = useState(false); //Estado de pausa.
+  const [simSpeed, setSimSpeed] = useState(1); //Para el segundo slider.
 
   let setup = () => {
     console.log("Hola");
@@ -29,6 +30,11 @@ function App() {
     setGridSize(newValue);
   };
 
+  const handleSimSpeedSliderChange = (event, newValue) => {
+  setSimSpeed(newValue);
+};
+
+
   const handleStart = () => {
     if (!location || running.current) return; 
     running.current = setInterval(() => {
@@ -37,7 +43,7 @@ function App() {
       .then(data => {
         setTrees(data["trees"]); //Update de React para los datos.
       });
-    }, 500); //Corre cada 500ms.
+    }, 1000 / simSpeed); //Velocidad del slider 2.
   };
 
   const handleStop = () => {
@@ -81,6 +87,7 @@ function App() {
         </Button>
       </div>
       <SliderField label="Grid size" min={10} max={40} step={10} type='number' value={gridSize} onChange={handleGridSizeSliderChange}/>
+      <SliderField label="Simulation speed" min={10} max={40} step={10} type='number' value={simSpeed} onChange={handleSimSpeedSliderChange}/>
       <svg width="500" height="500" xmlns="http://www.w3.org/2000/svg" style={{backgroundColor:"white"}}>
       {
         trees.map(tree => 

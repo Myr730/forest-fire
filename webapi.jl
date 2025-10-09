@@ -5,7 +5,11 @@ using UUIDs
 instances = Dict() #Diccionario para las instancias.
 
 route("/simulations", method = POST) do
-    model = forest_fire() # Crea una nueva simulación de incendio
+    payload = jsonpayload()
+    x = payload["dim"][1]
+    y = payload["dim"][2]
+
+    model = forest_fire(griddims=(x,y)) # Crea una nueva simulación de incendio
     id = string(uuid1()) #Le da un ID
     instances[id] = model #Lo guarda en el diccionario
 
