@@ -12,13 +12,14 @@ function App() {
   const [paused, setPaused] = useState(false); //Estado de pausa.
   const [simSpeed, setSimSpeed] = useState(1); //Para el segundo slider.
   const [density, setDensity] = useState(0.45) //Densidad para tercer slider, valor de 0.45.
+  const [probabilityofspread, setProbabilityofspread] = useState(50); //Le damos 50% de defecto
 
   let setup = () => {
     console.log("Hola");
     fetch("http://localhost:8000/simulations", {
       method: 'POST',
       headers: { 'Content-Type': 'application/json' },
-      body: JSON.stringify({ dim: [gridSize, gridSize] })
+      body: JSON.stringify({ dim: [gridSize, gridSize], density: density, probability_of_spread: probabilityofspread}) //Nos faltaba enviar density
     }).then(resp => resp.json())
     .then(data => {
       console.log(data);
@@ -38,6 +39,10 @@ function App() {
   const handleDensitySliderChange = (event, newValue) => {
     setDensity(newValue);
   };
+
+  const handleProbabilitySliderChange = (event, newValue) => {
+  setProbabilityofspread(newValue);
+};
 
 
   const handleStart = () => {
@@ -94,6 +99,7 @@ function App() {
       <SliderField label="Grid size" min={10} max={40} step={10} type='number' value={gridSize} onChange={handleGridSizeSliderChange}/>
       <SliderField label="Simulation speed" min={10} max={40} step={10} type='number' value={simSpeed} onChange={handleSimSpeedSliderChange}/>
       <SliderField label="Density" min={0.1} max={1.0} step={0.05} type='number' value={density} onChange={handleDensitySliderChange}/>
+      <SliderField label="Probability of Spread" min={0} max={100} step={1} type='number' value={probabilityofspread} onChange={handleProbabilitySliderChange}/>
       <svg width="500" height="500" xmlns="http://www.w3.org/2000/svg" style={{backgroundColor:"white"}}>
       {
         trees.map(tree => 
