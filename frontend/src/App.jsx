@@ -2,11 +2,12 @@ import { useRef, useState } from 'react'
 // import './App.css'
 import '@aws-amplify/ui-react/styles.css';
 import { Button } from "@aws-amplify/ui-react";
+import { SliderField } from '@aws-amplify/ui-react'; //No dejaba usar '@mui/material'.
 
 function App() {
   let [location, setLocation] = useState(""); //URL de la simulación.
   let [trees, setTrees] = useState([]); //Lista de arbolitos.
-  let gridSize = 5; //Tamaño de nuestro grid.
+  let [gridSize, setGridSize] = useState(20); //Tamaño de nuestro grid.
   const running = useRef(null);
   const [paused, setPaused] = useState(false); //Estado de pausa.
 
@@ -15,12 +16,17 @@ function App() {
     fetch("http://localhost:8000/simulations", {
       method: 'POST',
       headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({ dim: [gridSize, gridSize] })
     }).then(resp => resp.json())
     .then(data => {
       console.log(data);
       setLocation(data["Location"]);
       setTrees(data["trees"]); //Guardamos la ubicación y los datos de los árboles.
     });
+  };
+
+  const handleGridSizeSliderChange = (event, newValue) => {
+    setGridSize(newValue);
   };
 
   const handleStart = () => {
@@ -74,6 +80,7 @@ function App() {
           Pause
         </Button>
       </div>
+      <SliderField label="Grid size" min={10} max={40} step={10} type='number' value={gridSize} onChange={handleGridSizeSliderChange}/>
       <svg width="500" height="500" xmlns="http://www.w3.org/2000/svg" style={{backgroundColor:"white"}}>
       {
         trees.map(tree => 
