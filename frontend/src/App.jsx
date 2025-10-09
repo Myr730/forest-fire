@@ -4,9 +4,9 @@ import '@aws-amplify/ui-react/styles.css';
 import { Button } from "@aws-amplify/ui-react";
 
 function App() {
-  let [location, setLocation] = useState("");
-  let [trees, setTrees] = useState([]);
-  let gridSize = 5;
+  let [location, setLocation] = useState(""); //URL de la simulación.
+  let [trees, setTrees] = useState([]); //Lista de arbolitos.
+  let gridSize = 5; //Tamaño de nuestro grid.
   const running = useRef(null);
 
   let setup = () => {
@@ -18,7 +18,7 @@ function App() {
     .then(data => {
       console.log(data);
       setLocation(data["Location"]);
-      setTrees(data["trees"]);
+      setTrees(data["trees"]); //Guardamos la ubicación y los datos de los árboles.
     });
   };
 
@@ -28,19 +28,19 @@ function App() {
       fetch("http://localhost:8000" + location)
       .then(res => res.json())
       .then(data => {
-        setTrees(data["trees"]);
+        setTrees(data["trees"]); //Update de React para los datos.
       });
-    }, 500);
+    }, 500); //Corre cada 500ms.
   };
 
   const handleStop = () => {
     clearInterval(running.current);
   }
-
+  //Cuenta la cantidad de árboles "quemándose"
   let burning = trees.filter(t => t.status == "burning").length;
 
   if (burning == 0)
-    handleStop();
+    handleStop(); //Si no hay, para la simulación.
 
   let offset = (500 - gridSize * 12) / 2;
   return (

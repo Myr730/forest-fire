@@ -2,25 +2,25 @@ include("forest.jl")
 using Genie, Genie.Renderer.Json, Genie.Requests, HTTP
 using UUIDs
 
-instances = Dict()
+instances = Dict() #Diccionario para las instancias.
 
 route("/simulations", method = POST) do
-    model = forest_fire()
-    id = string(uuid1())
-    instances[id] = model
+    model = forest_fire() # Crea una nueva simulación de incendio
+    id = string(uuid1()) #Le da un ID
+    instances[id] = model #Lo guarda en el diccionario
 
-    trees = []
+    trees = [] #Lista de todos los árboles,
     for tree in allagents(model)
         push!(trees, tree)
     end
     
-    json(Dict(:msg => "Hola", "Location" => "/simulations/$id", "trees" => trees))
+    json(Dict(:msg => "Hola", "Location" => "/simulations/$id", "trees" => trees)) #Nos da los datos de los árboles.
 end
 
 route("/simulations/:id") do
-    model = instances[payload(:id)]
+    model = instances[payload(:id)] #Obtiene el modelo del ID
     run!(model, 1)
-    trees = []
+    trees = [] #Sacamos la info de los árboles.
     for tree in allagents(model)
         push!(trees, tree)
     end
