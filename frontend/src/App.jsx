@@ -11,6 +11,7 @@ function App() {
   const running = useRef(null);
   const [paused, setPaused] = useState(false); //Estado de pausa.
   const [simSpeed, setSimSpeed] = useState(1); //Para el segundo slider.
+  const [density, setDensity] = useState(0.45) //Densidad para tercer slider, valor de 0.45.
 
   let setup = () => {
     console.log("Hola");
@@ -31,8 +32,12 @@ function App() {
   };
 
   const handleSimSpeedSliderChange = (event, newValue) => {
-  setSimSpeed(newValue);
-};
+    setSimSpeed(newValue);
+  };
+
+  const handleDensitySliderChange = (event, newValue) => {
+    setDensity(newValue);
+  };
 
 
   const handleStart = () => {
@@ -88,6 +93,7 @@ function App() {
       </div>
       <SliderField label="Grid size" min={10} max={40} step={10} type='number' value={gridSize} onChange={handleGridSizeSliderChange}/>
       <SliderField label="Simulation speed" min={10} max={40} step={10} type='number' value={simSpeed} onChange={handleSimSpeedSliderChange}/>
+      <SliderField label="Density" min={0.1} max={1.0} step={0.05} type='number' value={density} onChange={handleDensitySliderChange}/>
       <svg width="500" height="500" xmlns="http://www.w3.org/2000/svg" style={{backgroundColor:"white"}}>
       {
         trees.map(tree => 
