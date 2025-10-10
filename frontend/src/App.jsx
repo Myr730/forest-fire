@@ -17,6 +17,8 @@ function App() {
   const [simSpeed, setSimSpeed] = useState(1); //Para el segundo slider.
   const [density, setDensity] = useState(0.45) //Densidad para tercer slider, valor de 0.45.
   const [probabilityofspread, setProbabilityofspread] = useState(50); //Le damos 50% de defecto
+  const [steps, setSteps] = useState(0);//Pasos
+
 
   let setup = () => {
     console.log("Hola");
@@ -56,6 +58,7 @@ function App() {
       .then(res => res.json())
       .then(data => {
         setTrees(data["trees"]); //Update de React para los datos.
+        setSteps(prev => prev + 1);// Incrementa un paso.
       });
     }, 1000 / simSpeed); //Velocidad del slider 2.
   };
@@ -109,8 +112,8 @@ function App() {
       <div style={{margin: "10px 0"}}>
       <strong>Estadísticas:</strong>
       <p>Total de árboles: {total}</p>
-      <p>Árboles quemándose: {burning}</p>
       <p>Árboles quemados: {burntCount} ({burntPercentage.toFixed(1)}%)</p>
+      <p>Pasos: {steps}</p>
     </div>
       <svg width="500" height="500" xmlns="http://www.w3.org/2000/svg" style={{backgroundColor:"white"}}>
       {
