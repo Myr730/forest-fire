@@ -8,6 +8,10 @@ function App() {
   let [location, setLocation] = useState(""); //URL de la simulación.
   let [trees, setTrees] = useState([]); //Lista de arbolitos.
   let [gridSize, setGridSize] = useState(20); //Tamaño de nuestro grid.
+  let total = trees.length; // Nuestro total de árboles.
+  let burntCount = trees.filter(t => t.status === "burnt").length; //Quemados
+  let burntPercentage = total > 0 ? (burntCount / total) * 100 : 0; //Porcentaje
+
   const running = useRef(null);
   const [paused, setPaused] = useState(false); //Estado de pausa.
   const [simSpeed, setSimSpeed] = useState(1); //Para el segundo slider.
@@ -79,6 +83,8 @@ function App() {
   if (burning == 0 && running.current)
     handleStop(); //Si no hay, para la simulación.
 
+  
+
   let offset = (500 - gridSize * 12) / 2;
   return (
     <>
@@ -100,6 +106,12 @@ function App() {
       <SliderField label="Simulation speed" min={10} max={40} step={10} type='number' value={simSpeed} onChange={handleSimSpeedSliderChange}/>
       <SliderField label="Density" min={0.1} max={1.0} step={0.05} type='number' value={density} onChange={handleDensitySliderChange}/>
       <SliderField label="Probability of Spread" min={0} max={100} step={1} type='number' value={probabilityofspread} onChange={handleProbabilitySliderChange}/>
+      <div style={{margin: "10px 0"}}>
+      <strong>Estadísticas:</strong>
+      <p>Total de árboles: {total}</p>
+      <p>Árboles quemándose: {burning}</p>
+      <p>Árboles quemados: {burntCount} ({burntPercentage.toFixed(1)}%)</p>
+    </div>
       <svg width="500" height="500" xmlns="http://www.w3.org/2000/svg" style={{backgroundColor:"white"}}>
       {
         trees.map(tree => 
@@ -116,6 +128,7 @@ function App() {
         )
       }
       </svg>
+      
     </>
   );
 }

@@ -9,7 +9,7 @@ route("/simulations", method = POST) do
     x = payload["dim"][1]
     y = payload["dim"][2]
 
-    model = forest_fire(griddims=(x,y)) # Crea una nueva simulación de incendio
+    model = forest_fire(griddims=(x,y), density=density, probability_of_spread=probability)
     id = string(uuid1()) #Le da un ID
     instances[id] = model #Lo guarda en el diccionario
 

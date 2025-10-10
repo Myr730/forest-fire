@@ -1,4 +1,4 @@
-using Agents, Random, Distributions
+using Agents, Random, Distributions, Statistics
 
 @enum TreeStatus green burning burnt
 
@@ -11,7 +11,7 @@ function forest_step(tree::TreeAgent, model)
     if tree.status == burning #Se revisa si el árbol está "quemándose"
         for neighbor in nearby_agents(tree, model) #Si sí, checa a sus vecinos.
             if neighbor.status == green
-                rand_val = rand((Uniform(0,100))) #Valor aleatorio
+                rand_val = rand(Uniform(0, 100)) #Valor aleatorio
                 if rand_val < get(model, :probability_of_spread, 50.0)#Si el valor es menor que probability_of_spread entonces encenderemos al vecino.
                     neighbor.status = burning #Cada vecino "verde" se cambia a estátus de "quemándose".
                 end
